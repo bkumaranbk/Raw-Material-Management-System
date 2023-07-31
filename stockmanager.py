@@ -309,13 +309,11 @@ class stackedExample(QWidget):
             else:
                 red_data = f"Raw Material successfully Deleted:\n\nRaw Material Name: {self.stock_name_del.text()}"
                 self.text_block3.setText(red_data)
-
-
-        now = datetime.datetime.now()
-        stock_del_date_time = now.strftime("%Y-%m-%d %H:%M")
-        current_stock_value = mp.get_current_stock_value(stock_name)
-        current_stock_cost = mp.get_current_stock_cost(stock_name)
-        mp.remove_stock(stock_name, current_stock_value, current_stock_cost, stock_del_date_time)
+                now = datetime.datetime.now()
+                stock_del_date_time = now.strftime("%Y-%m-%d %H:%M")
+                current_stock_value = mp.get_current_stock_value(stock_name)
+                current_stock_cost = mp.get_current_stock_cost(stock_name)
+                mp.remove_stock(stock_name, current_stock_value, current_stock_cost, stock_del_date_time)
 
         # Clear the input fields after processing the data
         self.stock_name_del.clear()
@@ -551,3 +549,5 @@ if __name__ == '__main__':
 
     window = Example()
     sys.exit(app.exec_())
+
+
