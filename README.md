@@ -8,7 +8,7 @@ The application has been developed using Python 3.7 and can be run on Windows op
 
 ## System Requirements
 
-- Python 3.7 or higher installed on your machine
+- Python 3.7 (venv) or higher installed on your machine
 - Operating System: Windows (the .exe file is specific to Windows)
 - Required Python libraries: PyQt5
 
