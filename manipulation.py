@@ -3,7 +3,9 @@
 def insert_prod(name, q, cost, date):
     with open("stock.txt", "a") as myfile:
         myfile.write(f"{name} {q} {cost} {date} INSERT\n")
-    return 'Inserted the stock in DataBase'
+    with open("transaction.txt", "a") as transaction_file:
+        transaction_file.write(f"{name} {q} {cost} {date} INSERT\n")
+    return 'Inserted the stock in Stock File'
 
 
 def show_stock():
@@ -27,6 +29,9 @@ def update_cost(name, cost, date):
     with open("stock.txt", "w") as myfile:
         myfile.writelines(updated_data)
 
+    with open("transaction.txt", "a") as transaction_file:
+        transaction_file.write(f"{name} {info[1]} {cost} {date} UPDATE\n")
+
 
 def update_quantity(name, val, date):
     with open("stock.txt", "r") as myfile:
@@ -46,6 +51,13 @@ def update_quantity(name, val, date):
     with open("stock.txt", "w") as myfile:
         myfile.writelines(updated_data)
 
+    with open("transaction.txt", "a") as transaction_file:
+        if val > 0:
+            action = "ADD"
+        else:
+            action = "REDUCE"
+        transaction_file.write(f"{name} {abs(val)} {info[2]} {date} {action}\n")
+
 
 def remove_stock(name, date):
     with open("stock.txt", "r") as myfile:
@@ -55,3 +67,7 @@ def remove_stock(name, date):
 
     with open("stock.txt", "w") as myfile:
         myfile.writelines(updated_data)
+
+    with open("transaction.txt", "a") as transaction_file:
+        transaction_file.write(f"{name} {date} REMOVE\n")
+
