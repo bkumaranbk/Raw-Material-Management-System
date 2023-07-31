@@ -13,6 +13,10 @@ def show_stock():
         data = myfile.readlines()
     return [line.strip().split() for line in data]
 
+def show_transaction_log():
+    with open("transaction.txt", "r") as myfile:
+        data = myfile.readlines()
+    return [line.strip().split() for line in data]
 
 def update_cost(name, cost, date):
     with open("stock.txt", "r") as myfile:

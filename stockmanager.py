@@ -1,20 +1,13 @@
 from PyQt5 import QtWidgets, QtGui
 import os
+import sys
+from pathlib import Path
 import datetime
 import manipulation as mp
 from PyQt5.QtCore import QRect
 from PyQt5.QtWidgets import QTabWidget
-from PyQt5.QtWidgets import QTableWidget
 from PyQt5.QtWidgets import QTableWidgetItem
-from PyQt5.QtWidgets import QVBoxLayout
-from PyQt5.QtGui import QIcon
 from PyQt5.QtWidgets import QFormLayout
-from PyQt5.QtWidgets import QLabel
-from PyQt5.QtWidgets import QLineEdit
-from PyQt5.QtWidgets import QListWidget
-from PyQt5.QtWidgets import QStackedWidget
-from PyQt5.QtWidgets import (QWidget, QPushButton, QMainWindow,
-                             QHBoxLayout, QAction)
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QStackedWidget, QListWidget, QAction, QPushButton, QHBoxLayout, QTableWidget, QLabel, QLineEdit
 from PyQt5.QtCore import Qt
@@ -24,6 +17,11 @@ from PyQt5.QtGui import QDoubleValidator
 if not os.path.exists("stock.txt"):
     with open("stock.txt", "w") as myfile:
         myfile.write("")
+
+# Create the "transaction.txt" file if it doesn't exist
+if not os.path.exists("transaction.txt"):
+    with open("transaction.txt", "w") as transaction_file:
+        transaction_file.write("")
 
 class Example(QMainWindow):
 
@@ -490,7 +488,17 @@ class stackedExample(QWidget):
             for i in range(1, self.Trans.rowCount()):
                 self.Trans.removeRow(1)
 
-        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'transaction.txt')
+        if getattr(sys, 'frozen', False):
+            # For executable (.exe)
+            application_path = Path(sys.executable).parent
+        else:
+            # For script (Python source code)
+            application_path = Path(__file__).resolve().parent
+
+        transaction_file_path = application_path / 'transaction.txt'
+
+        path = transaction_file_path
+
         if os.path.exists(path):
             with open(path, 'r') as tsearch:
                 x_c = tsearch.readlines()
