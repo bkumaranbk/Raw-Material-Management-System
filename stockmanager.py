@@ -304,10 +304,13 @@ class stackedExample(QWidget):
 
 
 
+
         now = datetime.datetime.now()
         stock_del_date_time = now.strftime("%Y-%m-%d %H:%M")
         stock_name = self.stock_name_del.text().replace(' ', '_').lower()
-        mp.remove_stock(stock_name, stock_del_date_time)
+        current_stock_value = mp.get_current_stock_value(stock_name)
+        current_stock_cost = mp.get_current_stock_cost(stock_name)
+        mp.remove_stock(stock_name,current_stock_value,current_stock_cost, stock_del_date_time)
 
         # Clear the input fields after processing the data
         self.stock_name_del.clear()
