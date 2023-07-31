@@ -93,3 +93,14 @@ def get_current_stock_cost(stock_name):
             return int(info[2])  # Return the current stock value
 
     return None  # Return None if the stock with the given name was not found
+
+def get_current_stock_name(stock_name):
+    with open("stock.txt", "r") as myfile:
+        data = myfile.readlines()
+
+    for line in data:
+        info = line.strip().split()
+        if info[0] == stock_name:
+            return stock_name  # Return the current stock name value
+
+    return None  # Return None if the stock with the given name was not found

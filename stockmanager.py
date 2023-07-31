@@ -94,7 +94,7 @@ class stackedExample(QWidget):
         # Center align the items in the QListWidget
         for i in range(self.leftlist.count()):
 
-            print('\n')
+            # print('\n')
             item = self.leftlist.item(i)
             item.setTextAlignment(Qt.AlignLeft)
 
@@ -182,7 +182,7 @@ class stackedExample(QWidget):
 
         stock_add_date_time = now.strftime("%Y-%m-%d %H:%M")
         d = mp.insert_prod(stock_name_inp, stock_count_inp, stock_cost_inp, stock_add_date_time)
-        print(d)
+        # print(d)
         # Need to add the above details to table
 
         # Clear the input fields after processing the data
@@ -295,46 +295,61 @@ class stackedExample(QWidget):
     def call_del(self):
 
         # Validation checks for mandatory fields
+
+        stock_name = self.stock_name_del.text().replace(' ', '_').lower()
+        current_stock_name = mp.get_current_stock_name(stock_name)
+
+        print(current_stock_name)
         if not self.stock_name_del.text():
             QtWidgets.QMessageBox.critical(self, "Error", "Please fill in all the mandatory fields.")
-            return
         else:
-            red_data = f"Raw Material successfully Deleted:\n\nRaw Material Name: {self.stock_name_del.text()}"
-            self.text_block3.setText(red_data)
-
-
+            if (stock_name != current_stock_name):
+                # print(stock_name != current_stock_name)
+                QtWidgets.QMessageBox.critical(self, "Error", "Name Does not exist")
+            else:
+                red_data = f"Raw Material successfully Deleted:\n\nRaw Material Name: {self.stock_name_del.text()}"
+                self.text_block3.setText(red_data)
 
 
         now = datetime.datetime.now()
         stock_del_date_time = now.strftime("%Y-%m-%d %H:%M")
-        stock_name = self.stock_name_del.text().replace(' ', '_').lower()
         current_stock_value = mp.get_current_stock_value(stock_name)
         current_stock_cost = mp.get_current_stock_cost(stock_name)
-        mp.remove_stock(stock_name,current_stock_value,current_stock_cost, stock_del_date_time)
+        mp.remove_stock(stock_name, current_stock_value, current_stock_cost, stock_del_date_time)
 
         # Clear the input fields after processing the data
         self.stock_name_del.clear()
 
     def call_red(self):
+
+        stock_name = self.stock_name_red.text().replace(' ', '_').lower()
+        current_stock_name = mp.get_current_stock_name(stock_name)
+
+
         # Validation checks for mandatory fields
         if not self.stock_name_red.text() or not self.stock_count_red.text():
             QtWidgets.QMessageBox.critical(self, "Error", "Please fill in all the mandatory fields.")
             return
         else:
-            stock_name = self.stock_name_red.text().replace(' ', '_').lower()
-            current_stock_value = mp.get_current_stock_value(stock_name)  # Using the function directly
-            stock_count_red = int(self.stock_count_red.text())
-
-            if current_stock_value is None:
-                QtWidgets.QMessageBox.critical(self, "Error", f"Stock with name '{stock_name}' not found.")
+            if (stock_name != current_stock_name):
+                # print(stock_name != current_stock_name)
+                QtWidgets.QMessageBox.critical(self, "Error", "Name Does not exist")
+                self.stock_name_red.clear()
+                self.stock_count_red.clear()
                 return
-            elif current_stock_value < stock_count_red:
-                QtWidgets.QMessageBox.critical(self, "Error",
-                                               f"Current stock level is low. Cannot reduce by {stock_count_red}.")
-                return
+            else:
+                current_stock_value = mp.get_current_stock_value(stock_name)  # Using the function directly
+                stock_count_red = int(self.stock_count_red.text())
 
-            red_data = f"Raw Material successfully Reduced:\n\nRaw Material Name: {self.stock_name_red.text()}\nQuantity: {self.stock_count_red.text()}"
-            self.text_block2.setText(red_data)
+                if current_stock_value is None:
+                    QtWidgets.QMessageBox.critical(self, "Error", f"Stock with name '{stock_name}' not found.")
+                    return
+                elif current_stock_value < stock_count_red:
+                    QtWidgets.QMessageBox.critical(self, "Error", f"Current stock level is low. Cannot reduce by {stock_count_red}.")
+                    return
+
+        red_data = f"Raw Material successfully Reduced:\n\nRaw Material Name: {self.stock_name_red.text()}\nQuantity: {self.stock_count_red.text()}"
+        self.text_block2.setText(red_data)
 
         now = datetime.datetime.now()
         stock_red_date_time = now.strftime("%Y-%m-%d %H:%M")
@@ -346,18 +361,29 @@ class stackedExample(QWidget):
         self.stock_count_red.clear()
 
     def call_add(self):
+
+        stock_name = self.stock_name_add.text().replace(' ', '_').lower()
+        current_stock_name = mp.get_current_stock_name(stock_name)
+
         # Validation checks for mandatory fields
         if not self.stock_name_add.text() or not self.stock_count_add.text():
             QtWidgets.QMessageBox.critical(self, "Error", "Please fill in all the mandatory fields.")
             return
         else:
-            add_data = f"Raw Material successfully Added:\n\nRaw Material Name: {self.stock_name_add.text()}\nQuantity: {self.stock_count_add.text()}"
-            self.text_block1.setText(add_data)
+            if (stock_name != current_stock_name):
+                # print(stock_name != current_stock_name)
+                QtWidgets.QMessageBox.critical(self, "Error", "Name Does not exist")
+                self.stock_name_add.clear()
+                self.stock_count_add.clear()
+                return
+            else:
+                add_data = f"Raw Material successfully Added:\n\nRaw Material Name: {self.stock_name_add.text()}\nQuantity: {self.stock_count_add.text()}"
+                self.text_block1.setText(add_data)
+
 
 
         now = datetime.datetime.now()
         stock_call_add_date_time = now.strftime("%Y-%m-%d %H:%M")
-        stock_name = self.stock_name_add.text().replace(' ', '_').lower()
         stock_val = int(self.stock_count_add.text())
         mp.update_quantity(stock_name, stock_val, stock_call_add_date_time)
 
@@ -370,8 +396,8 @@ class stackedExample(QWidget):
     def stack3UI(self):
 
         table = mp.show_stock()
-        print('show')
-        print(table)
+        # print('show')
+        # print(table)
         layout = QVBoxLayout()
         self.srb = QPushButton()
         self.srb.setText("Get Search Result.")
