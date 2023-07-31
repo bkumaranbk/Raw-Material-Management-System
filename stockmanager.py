@@ -338,6 +338,7 @@ class stackedExample(QWidget):
         self.lbl_trans_text.setText("Enter the search keyword:")
         self.trans_text = QLineEdit()
 
+
         self.Trans.setColumnCount(6)
         self.Trans.setColumnWidth(0, 150)
         self.Trans.setColumnWidth(1, 150)
@@ -363,48 +364,44 @@ class stackedExample(QWidget):
         self.stack4.setLayout(layout)
 
     def show_trans_history(self):
-        if self.Trans.rowCount()>1:
-            for i in range(1,self.Trans.rowCount()):
+        if self.Trans.rowCount() > 1:
+            for i in range(1, self.Trans.rowCount()):
                 self.Trans.removeRow(1)
 
-        path = os.path.join(os.path.dirname(os.path.realpath(__file__)),'transaction.txt')
+        path = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'transaction.txt')
         if os.path.exists(path):
-            tsearch = open(path, 'r')
-            x_c = tsearch.readlines()
-            tsearch.close()
+            with open(path, 'r') as tsearch:
+                x_c = tsearch.readlines()
+
             x = []
             if self.trans_text.text() != '':
                 key = self.trans_text.text()
-                for i in range(0,len(x_c)):
-                    a = x_c[i].split(" ")
+                for line in x_c:
+                    a = line.split(" ")
                     name = a[0]
                     action = a[-2]
-                    if (key.lower() in name.lower()) or (key.lower() in action.lower()) :
+                    if (key.lower() in name.lower()) or (key.lower() in action.lower()):
                         x.append(a)
             else:
-                x = x_c.copy()
+                x = [line.split() for line in x_c]
 
-            for i in range(0,len(x)):
-                x.sort(key=lambda a: a[4])
-            #print(x)
+            x.sort(key=lambda a: a[4])
+
             tid = 1900001
-            for i in range(1,len(x)+1):
+            for i, a in enumerate(x, 1):
                 self.Trans.insertRow(i)
-
-                a = x[i-1].split(" ")
-                if a[-2] == 'UPDATE':
-                    p = 'Quantity of Raw Material Changed from '+a[1]+' to '+a[2]
-                elif a[-2] == 'INSERT':
-                    p = 'Raw Material added with Quantity : '+a[1]+' and Cost(Per Unit in Rs.) : '+a[2]
-                elif a[-2] == 'REMOVE':
+                if a[5] == 'UPDATE':
+                    p = 'Quantity of Raw Material Changed from ' + a[1] + ' to ' + a[2]
+                elif a[5] == 'INSERT':
+                    p = 'Raw Material added with Quantity: ' + a[1] + ' and Cost(Per Unit in Rs.): ' + a[2]
+                elif a[5] == 'REMOVE':
                     p = 'Raw Material information deleted.'
                 else:
                     p = 'None'
 
-
                 self.Trans.setItem(i, 0, QTableWidgetItem(str(tid)))
-                self.Trans.setItem(i, 1, QTableWidgetItem(a[0].replace('_',' ')))
-                self.Trans.setItem(i, 2, QTableWidgetItem(a[-2]))
+                self.Trans.setItem(i, 1, QTableWidgetItem(a[0].replace('_', ' ')))
+                self.Trans.setItem(i, 2, QTableWidgetItem(a[5]))
                 self.Trans.setItem(i, 3, QTableWidgetItem(a[3]))
                 self.Trans.setItem(i, 4, QTableWidgetItem(a[4]))
                 self.Trans.setItem(i, 5, QTableWidgetItem(p))
