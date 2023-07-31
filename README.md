@@ -56,4 +56,4 @@ This project is licensed under the MIT License.
 Special thanks to Mr.Kasun sir for creating this Raw Material Inventory Management System.
 
 # Contact
-If you have any questions or need further assistance, feel free to contact us at bkumaran98@example.com.
+If you have any questions or need further assistance, feel free to contact us at bkumaran98@gmail.com.
