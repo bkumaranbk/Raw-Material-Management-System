@@ -33,8 +33,6 @@ pip install PyQt5
  ```bash
 pyinstaller stockmanager.py --onefile
 ```
-Replace my_icon.ico with your desired icon file. The executable file will be generated in the dist directory.
-
 5. Double-click the generated .exe file to run the Raw Material Inventory Management System.
 
 # Application Features
