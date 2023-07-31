@@ -71,3 +71,18 @@ def remove_stock(name, date):
     with open("transaction.txt", "a") as transaction_file:
         transaction_file.write(f"{name} {date} REMOVE\n")
 
+    def get_current_stock_value(self, stock_name):
+        # Assuming mp is your data management object/class that contains a method to retrieve stock values
+        current_stock_value = mp.get_stock_value(stock_name)  # Replace 'get_stock_value' with the actual method name
+        return current_stock_value
+
+def get_current_stock_value(stock_name):
+    with open("stock.txt", "r") as myfile:
+        data = myfile.readlines()
+
+    for line in data:
+        info = line.strip().split()
+        if info[0] == stock_name:
+            return int(info[1])  # Return the current stock value
+
+    return None  # Return None if the stock with the given name was not found
