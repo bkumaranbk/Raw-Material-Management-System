@@ -15,6 +15,9 @@ from PyQt5.QtWidgets import QListWidget
 from PyQt5.QtWidgets import QStackedWidget
 from PyQt5.QtWidgets import (QWidget, QPushButton, QMainWindow,
                              QHBoxLayout, QAction)
+from PyQt5.QtGui import QIcon, QFont
+from PyQt5.QtWidgets import QApplication, QMainWindow, QVBoxLayout, QWidget, QStackedWidget, QListWidget, QAction, QPushButton, QHBoxLayout, QTableWidget, QLabel, QLineEdit
+
 
 # Create the "stock.txt" file if it doesn't exist
 if not os.path.exists("stock.txt"):
@@ -26,10 +29,13 @@ class Example(QMainWindow):
 
     def __init__(self):
         super().__init__()
+        font = QFont("Poppins", 10)
+        QApplication.setFont(font)
 
         self.initUI()
 
     def initUI(self):
+
         self.st = stackedExample()
         exitAct = QAction(QIcon('exit_icon.png'), 'Exit', self)
         exitAct.setShortcut('Ctrl+Q')
@@ -109,22 +115,22 @@ class stackedExample(QWidget):
 
 
     def stack1UI(self):
-        layout = QFormLayout()
+        layout = QVBoxLayout()
 
         self.ok = QPushButton('Add Raw Material', self)
         cancel = QPushButton('Cancel', self)
 
         self.stock_name = QLineEdit()
         self.stock_name.setPlaceholderText("Enter Raw Material Name (mandatory)")
-        layout.addRow("Raw Material Name", self.stock_name)
+        layout.addWidget(self.stock_name)
 
         self.stock_count = QLineEdit()
         self.stock_count.setPlaceholderText("Enter Quantity (mandatory)")
-        layout.addRow("Quantity", self.stock_count)
+        layout.addWidget(self.stock_count)
 
         self.stock_cost = QLineEdit()
         self.stock_cost.setPlaceholderText("Enter Cost of Raw Material (per item) (mandatory)")
-        layout.addRow("Cost of Raw Material (per item)", self.stock_cost)
+        layout.addWidget(self.stock_cost)
 
         layout.addWidget(self.ok)
         layout.addWidget(cancel)
@@ -134,6 +140,10 @@ class stackedExample(QWidget):
         cancel.clicked.connect(self.stock_name.clear)
         cancel.clicked.connect(self.stock_cost.clear)
         cancel.clicked.connect(self.stock_count.clear)
+
+        self.text_block = QLabel()
+        layout.addWidget(self.text_block)
+
         self.stack1.setLayout(layout)
 
     def on_click(self):
@@ -141,6 +151,10 @@ class stackedExample(QWidget):
         if not self.stock_name.text() or not self.stock_count.text() or not self.stock_cost.text():
             QtWidgets.QMessageBox.critical(self, "Error", "Please fill in all the mandatory fields.")
             return
+        else:
+            inserted_data = f"Raw Material successfully Inserted:\n\nRaw Material Name: {self.stock_name.text()}\nQuantity: {self.stock_count.text()}\nCost of Raw Material (per item): {self.stock_cost.text()}"
+            self.text_block.setText(inserted_data)
+
 
         now = datetime.datetime.now()
         stock_name_inp = self.stock_name.text().replace(' ', '_').lower()
@@ -151,6 +165,11 @@ class stackedExample(QWidget):
         d = mp.insert_prod(stock_name_inp, stock_count_inp, stock_cost_inp, stock_add_date_time)
         print(d)
         # Need to add the above details to table
+
+        # Clear the input fields after processing the data
+        self.stock_name.clear()
+        self.stock_cost.clear()
+        self.stock_count.clear()
 
     def stack2UI(self):
 
@@ -199,11 +218,11 @@ class stackedExample(QWidget):
         cancel = QPushButton('Cancel', self)
 
         self.stock_name_red = QLineEdit()
-        self.stock_name_add.setPlaceholderText("Enter Raw Material Name (mandatory)")
+        self.stock_name_red.setPlaceholderText("Enter Raw Material Name (mandatory)")
         layout.addRow("Raw Material Name", self.stock_name_red)
 
         self.stock_count_red = QLineEdit()
-        self.stock_count_add.setPlaceholderText("Enter Quantity to add (mandatory)")
+        self.stock_count_red.setPlaceholderText("Enter Quantity to add (mandatory)")
         layout.addRow("Quantity to reduce", self.stock_count_red)
 
 
@@ -219,8 +238,9 @@ class stackedExample(QWidget):
         layout = QFormLayout()
         self.ok_del = QPushButton('Delete Raw Material', self)
         cancel = QPushButton('Cancel', self)
-        self.stock_name_add.setPlaceholderText("Enter Raw Material Name (mandatory)")
+
         self.stock_name_del = QLineEdit()
+        self.stock_name_del.setPlaceholderText("Enter Raw Material Name (mandatory)")
 
         layout.addRow("Raw Material Name", self.stock_name_del)
         layout.addWidget(self.ok_del)
@@ -232,16 +252,31 @@ class stackedExample(QWidget):
 
     def call_del(self):
         # Validation checks for mandatory fields
-        if not self.stock_name_add.text() or not self.stock_count_add.text():
+        if not self.stock_name_del.text():
             QtWidgets.QMessageBox.critical(self, "Error", "Please fill in all the mandatory fields.")
             return
 
         now = datetime.datetime.now()
         stock_del_date_time = now.strftime("%Y-%m-%d %H:%M")
-        stock_name = self.stock_name_del.text().replace(' ','_').lower()
-        mp.remove_stock(stock_name,stock_del_date_time)
+        stock_name = self.stock_name_del.text().replace(' ', '_').lower()
+
+        if not self.stock_name_del.text():
+            QtWidgets.QMessageBox.critical(self, "Error", "Please fill in all the mandatory fields.")
+        else:
+            Deleted_data = f"Raw Material successfully Deleted:\n\nRaw Material Name: {self.stock_name_del.text()}"
+            self.text_block.setText(Deleted_data)
+
+            self.stock_name_del.clear()
 
     def call_red(self):
+        # Validation checks for mandatory fields
+        if not self.stock_name_red.text() or not self.stock_count_red.text():
+            QtWidgets.QMessageBox.critical(self, "Error", "Please fill in all the mandatory fields.")
+            return
+        else:
+            Reduced_data = f"Raw Material successfully Reduced:\n\nRaw Material Name: {self.stock_name_red.text()}\nQuantity: {self.stock_count_red.text()}"
+            self.text_block.setText(Reduced_data)
+
         now = datetime.datetime.now()
         stock_red_date_time = now.strftime("%Y-%m-%d %H:%M")
         stock_name = self.stock_name_red.text().replace(' ','_').lower()
@@ -252,8 +287,6 @@ class stackedExample(QWidget):
             mp.update_quantity(stock_name, stock_val, stock_red_date_time)
         except Exception:
             print('Exception')
-
-
 
     def call_add(self):
         # Validation checks for mandatory fields
@@ -390,10 +423,12 @@ class stackedExample(QWidget):
             tid = 1900001
             for i, a in enumerate(x, 1):
                 self.Trans.insertRow(i)
-                if a[5] == 'UPDATE':
-                    p = 'Quantity of Raw Material Changed from ' + a[1] + ' to ' + a[2]
+                if a[5] == 'ADD':
+                    p = 'Quantity of Raw Material ADD ' + a[1] +' With Previous Quantity'
                 elif a[5] == 'INSERT':
                     p = 'Raw Material added with Quantity: ' + a[1] + ' and Cost(Per Unit in Rs.): ' + a[2]
+                elif a[5] == 'REDUCE':
+                    p = 'Quantity of Raw Material REDUCE ' + a[1] +' With Previous Quantity'
                 elif a[5] == 'REMOVE':
                     p = 'Raw Material information deleted.'
                 else:
@@ -411,8 +446,6 @@ class stackedExample(QWidget):
             self.lbl4.setText('Transaction History.')
         else:
             self.lbl4.setText('No valid information found.')
-
-
 
     def display(self, i):
         self.Stack.setCurrentIndex(i)
