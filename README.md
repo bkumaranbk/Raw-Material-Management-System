@@ -16,12 +16,12 @@ The application has been developed using Python 3.7 and can be run on Windows op
 
 1. Clone the GitHub repository to your local machine using the following command:
  ```bash
-git clone [https://github.com/your_username/raw-material-inventory.git](git clone https://github.com/bkumaranbk/Raw-Material-Management-System)
+git clone [https://github.com/bkumaranbk/Raw-Material-Management-System.git]
 ```
 
 2. Navigate to the project directory:
  ```bash
-cd raw-material-inventory
+cd Raw-Material-Management-System
 ```
 
 3. Install required Python libraries (if not already installed):
